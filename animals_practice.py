@@ -11,19 +11,53 @@ def in_int(message):
 
 class Animal():
 
-    def __init__(self,weight,growth_rate):
+    def __init__(self, weight, growth_rate, food_need, water_need, status, name):
         self.weight = weight
         self.days_growing = 0
         self.growth_rate = growth_rate
-        #slef.food_need = 
+        self.food_need = food_need
+        c = water_need
+        self.status = status
+        self.type = 'generic'
+        self.name = name
 
-    def get_weight(self):
-        print(self.weight)
+    def needs(self):
+        print('Food need:  '+self.food_need)
+        print('Water need: '+self.water_need)
 
-list = []
-for i in range(5):
-    list.append(Animal(i,i*2))
+    def report(self):
+        print('Weight:       '+self.wieght)
+        print('Days growing: '+self.days_growing)
+        print('Growh rate:   '+self.growth_rate)
+        print('Food need:    '+self.food_need)
+        print('Water need:   '+self.water_need)
+        print('Status:       '+self.status)
+        print('Type:         '+self.type)
+        print('Name:         '+self.name)
 
-for i in range(5):
-    list[i].get_weight()
-print(list)
+    def update_status(self, status):
+        self.status = status
+
+    def grow(self, food, water):
+        if self.food_need < food and self.growth_rate < water:
+            self.weight += self.growth_rate
+        else:
+            print('Not enough resources for growth.')
+
+class Cow(Animal):
+
+    def __init__(self, weight, growth_rate, food_need, water_need, status, name):
+        self.weight = weight
+        self.days_growing = 0
+        self.growth_rate = growth_rate
+        self.food_need = food_need
+        c = water_need
+        self.status = status
+        self.type = 'generic'
+        self.name = name
+    
+    def grow(self, food, water):
+        if self.food_need < food and self.growth_rate < water:
+            self.weight += self.growth_rate*0.93
+        else:
+            print('Not enough resources for growth.')
