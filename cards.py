@@ -25,6 +25,12 @@ class Card():
         out += self.__suit
         return out
 
+    def value(self):
+        return self.__value
+
+    def suit(self):
+        return self.__suit
+
 class Deck():
     def __init__(self, size=52):
         self.__cards = self.build()
@@ -65,7 +71,7 @@ class Deck():
             j = randint(0,i)
             self.__cards[i], self.__cards[j] = self.__cards[j], self.__cards[i]
 
-class Player():
+class Player(object):
     def __init__(self, deck, size):
         self.__hand = deck.deal(size)
 
@@ -74,11 +80,33 @@ class Player():
         for i in range(len(self.__hand)):
             out.append(self.__hand[i].show())
         return out
-        
+
+    def draw(self, size=1):
+        self.hand += deck.deal(size)
+
+    def total(self):
+        total = 0
+        for i in range(len(self.__hand)):
+            total += self.__hand[i].value()
+        return total
+
+class Dealer(Player()):
+    def initShow(self):
+        if total() == 21:
+            return 'blackjack'
+        else:
+            return c1.show()
+
+    def play():
+        print(self.show())
+        play = True
+        while play == True:
+            if self.total() < 16:
+                self.draw()
+            elif self.total() <= 21:
+                return self.total()
+            
     
 x = Deck()
 x.shuffle()
-one = Player(x,5)
-two = Player(x,5)
-print(one.show())
-print(two.show())
+one = Player(x,2)
