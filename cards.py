@@ -156,15 +156,23 @@ class Dealer(Player):
                 print()
                 return None
 
-def numIn(message):
+def numIn(message,top=None,bottom=0):
     valid = False
     while valid == False: 
         try:
-            number = int(input(message))
-            valid = True
-            return number
+            number = abs(int(input(message)))
+            if top != None:
+                if number > top or number <= bottom:
+                    print('That is not a valid number.')
+                else:
+                    valid = True
+                    return number
+            else:
+                valid = True
+                return number
         except:
             print('That is not a valid number.')
+        
 
 def twoIn(message,one,two):
     valid = False
@@ -172,9 +180,10 @@ def twoIn(message,one,two):
         pIn = input(message).upper()
         if pIn == one or pIn == two:
             valid = True
+            return pIn
         else:
              print('That is not a valid option.')
-        return pIn
+        
 
 def playHand(player,handNum,deck):
     print('    Your cards are: '+player.show())
@@ -198,9 +207,9 @@ def main():
     x.shuffle()
     dealer = Dealer(x,2,None)
     players = []
-    playerNum = numIn('Please input the number of players: ')
+    playerNum = numIn('Please input the number of players [MAX 7]: ',7)
     for i in range(playerNum):
-        players.append(Player(x,2,numIn('Please input the bet for player '+str(i+1)+': £')))
+        players.append(Player(x,2,numIn(('Please input the bet for player '+str(i+1)+': £'))))
 
     #Initial showing of cards
     print()
@@ -210,10 +219,10 @@ def main():
 
     #Insurance    
     print()
-    if dealer.firstVal() == '1':
+    if dealer.firstVal() == 1:
         for i in range(playerNum):
             players[i].insure(numIn('The dealer\'s first card is an ace, please place an insurance bet for player '+str(i+1)+': £'))
-    elif dealer.firstVal() == '10':
+    elif dealer.firstVal() == 10:
         for i in range(playerNum):
             players[i].insure(numIn('The dealer\'s first card is a 10, please place an insurance bet for player '+str(i+1)+': £'))
 
