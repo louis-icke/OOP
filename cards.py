@@ -264,12 +264,14 @@ def main():
     #Totaling
     for i in range(playerNum):
         player = players[i]
-        if player.total() > dealer.total() and player.total() < 22: #If win:
+        if player.total() < 22: #If bust:
+            print('Player '+str(i+1)+' is bust.')
+            total = 0
+        elif player.total() > dealer.total(): #If win
             print('Player '+str(i+1)+' total: '+str(player.total()))
             total = player.getBet() * 2
         else:
-            print('Player '+str(i+1)+' is bust.')
-            total = 0
+            print('Dealer wins against player '+str(i+1)+'.')
         print('Player '+str(i+1)+' wins £'+str(total))
 
 main()
