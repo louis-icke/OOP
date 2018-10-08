@@ -153,7 +153,7 @@ class Dealer(Player):
                 print()
                 return self.total()
             else:
-                print()
+                print('Dealer is bust/\n')
                 return None
 
 def numIn(message,top=None,bottom=0):
@@ -258,18 +258,21 @@ def main():
         '''if player.hand2 != None:
             playHand(player,1)'''
 
-    dealer.play(x)
+    dealTot = dealer.play(x)
     print('\nDealer total: '+str(dealer.total())+'\n')
 
     #Totaling
     for i in range(playerNum):
         player = players[i]
-        if player.total() < 22: #If bust:
+        total = 0
+        if player.total() > 22: #If bust:
             print('Player '+str(i+1)+' is bust.')
             total = 0
-        elif player.total() > dealer.total(): #If win
-            print('Player '+str(i+1)+' total: '+str(player.total()))
+        elif dealTot == None: #If dealer is bust
             total = player.getBet() * 2
+        elif player.total() > dealer.total(): #If win
+            total = player.getBet() * 2
+            print('Player '+str(i+1)+' wins against dealer')
         else:
             print('Dealer wins against player '+str(i+1)+'.')
         print('Player '+str(i+1)+' wins £'+str(total))
