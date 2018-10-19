@@ -20,6 +20,8 @@ class Card():
     def show(self):
         if self.__type == 'picture':
             out = self.__picture
+        elif self.__value == 1:
+            out = 'A'
         else:
             out = str(self.__value)
         out += self.__suit
@@ -125,7 +127,8 @@ class Player(object):
         print('A bet of £'+str(self.__bet)+' has been placed on the second hand.')'''
         
     def isBlackjack(self):
-        if self.total() == 21:
+        total = self.hand[0].value() + self.hand[1].value()
+        if total == 21:
             return True
         else:
             return False
@@ -227,10 +230,14 @@ def main():
     print()
     if dealer.firstVal() == 1:
         for i in range(playerNum):
-            players[i].insure(numIn('The dealer\'s first card is an ace, please place an insurance bet for player '+str(i+1)+': £'))
+            insurance = numIn('The dealer\'s first card is an ace, please place an insurance bet for player '+str(i+1)+': £')
+            playTotal[i] -= insurance
+            players[i].insure(insurance)
     elif dealer.firstVal() == 10:
         for i in range(playerNum):
-            players[i].insure(numIn('The dealer\'s first card is a 10, please place an insurance bet for player '+str(i+1)+': £'))
+            insurance = numIn('The dealer\'s first card is a 10, please place an insurance bet for player '+str(i+1)+': £')
+            playTotal[i] -= insurance
+            players[i].insure(insurance)
 
     #Check for dealer blackjack
     if dealer.isBlackjack() == True:
