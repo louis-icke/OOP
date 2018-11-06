@@ -20,8 +20,6 @@ class Card():
     def show(self):
         if self.__type == 'picture':
             out = self.__picture
-        elif self.__value == 1:
-            out = 'A'
         else:
             out = str(self.__value)
         out += self.__suit
@@ -127,8 +125,7 @@ class Player(object):
         print('A bet of £'+str(self.__bet)+' has been placed on the second hand.')'''
         
     def isBlackjack(self):
-        total = self.hand[0].value() + self.hand[1].value()
-        if total == 21:
+        if self.total() == 21:
             return True
         else:
             return False
@@ -159,14 +156,11 @@ class Dealer(Player):
                 print()
                 return None
 
-def numIn(message,top=None,bottom=0, whole=True):
+def numIn(message,top=None,bottom=0):
     valid = False
     while valid == False: 
         try:
-            if whole == True:
-                number = abs(int(input(message)))
-            else:
-                number = abs(float(input(message)))
+            number = abs(int(input(message)))
             if top != None:
                 if number > top or number <= bottom:
                     print('That is not a valid number.')
@@ -193,7 +187,6 @@ def twoIn(message,one,two):
 
 def playHand(player,handNum,deck):
     print('    Your cards are: '+player.show())
-    print('    Your total is: '+str(player.total()))
     playing = True
     while playing == True:
         #Hit / stand
@@ -204,7 +197,6 @@ def playHand(player,handNum,deck):
             playing = False
         print('    Your cards are: '+player.show())
         #check for bust
-        print('    Your total is: '+str(player.total()))
         if player.isBust() == True:
             print('    You are bust.')
             playing = False
@@ -215,10 +207,9 @@ def main():
     x.shuffle()
     dealer = Dealer(x,2,None)
     players = []
+    playerNum = numIn('Please input the number of players [MAX 7]: ',7)
     for i in range(playerNum):
-        bet = numIn(('Please input the bet for player '+str(i+1)+': £'),None,0,False)
-        playTotal[i] -= bet
-        players.append(Player(x,2,bet))
+        players.append(Player(x,2,numIn(('Please input the bet for player '+str(i+1)+': £'))))
 
     #Initial showing of cards
     print()
@@ -230,14 +221,10 @@ def main():
     print()
     if dealer.firstVal() == 1:
         for i in range(playerNum):
-            insurance = numIn('The dealer\'s first card is an ace, please place an insurance bet for player '+str(i+1)+': £')
-            playTotal[i] -= insurance
-            players[i].insure(insurance)
+            players[i].insure(numIn('The dealer\'s first card is an ace, please place an insurance bet for player '+str(i+1)+': £'))
     elif dealer.firstVal() == 10:
         for i in range(playerNum):
-            insurance = numIn('The dealer\'s first card is a 10, please place an insurance bet for player '+str(i+1)+': £')
-            playTotal[i] -= insurance
-            players[i].insure(insurance)
+            players[i].insure(numIn('The dealer\'s first card is a 10, please place an insurance bet for player '+str(i+1)+': £'))
 
     #Check for dealer blackjack
     if dealer.isBlackjack() == True:
@@ -249,7 +236,6 @@ def main():
                 total += player.getBet()
             total += player.getInsurance() * 2
             print('Player '+str(i+1)+' wins £'+str(total))
-            break
 
     #Check for player blackjack
     for i in range(playerNum):
@@ -274,44 +260,18 @@ def main():
 
     dealer.play(x)
     print('\nDealer total: '+str(dealer.total())+'\n')
-    if dealer.isBust() == True:
-        print('\nDealer is bust.\n')
 
     #Totaling
     for i in range(playerNum):
         player = players[i]
-        total = 0
-        if player.isBust() == True:
+        if player.total() < 22: #If bust:
             print('Player '+str(i+1)+' is bust.')
             total = 0
-        elif dealer.isBust() == True:
+        elif player.total() > dealer.total(): #If win
             print('Player '+str(i+1)+' total: '+str(player.total()))
             total = player.getBet() * 2
         else:
-            if player.total() > dealer.total(): #If win
-                print('Player '+str(i+1)+' total: '+str(player.total()))
-                total = player.getBet() * 2
-            elif player.total() == dealer.total(): #If draw
-                print('Player '+str(i+1)+' draws with dealer')
-                tptal = player.getBet()
-            else:
-                print('Dealer wins against player '+str(i+1)+'.')
+            print('Dealer wins against player '+str(i+1)+'.')
         print('Player '+str(i+1)+' wins £'+str(total))
-        playTotal[i] += total
-        print('Player '+str(i+1)+' has £'+str(playTotal[i]))
-        print()
 
-
-play = True
-playerNum = numIn('Please input the number of players [MAX 7]: ',7)
-playTotal = []
-for i in range(playerNum):
-    playTotal.append(100)
-print('\nEach player starts with £100')
-while play == True:
-    print()
-    main()
-    pIn = twoIn('\nDo you want to play again? [Y/N] ','Y','N')
-    if pIn == 'N':
-        play = False
-    
+main()
